@@ -20,3 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/inspection-report', [ReportController::class, 'inspectionReport']);
+
+Route::prefix('v2')->group(function () {
+    Route::get('/inspection-report', [ReportController::class, 'inspectionReportV2']);
+});

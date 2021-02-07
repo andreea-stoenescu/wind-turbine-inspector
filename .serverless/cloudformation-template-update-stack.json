@@ -167,7 +167,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel/dev/1612699353613-2021-02-07T12:02:33.613Z/laravel.zip"
+          "S3Key": "serverless/laravel/dev/1612700754782-2021-02-07T12:25:54.782Z/laravel.zip"
         },
         "Handler": "public/index.php",
         "Runtime": "provided.al2",
@@ -195,7 +195,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel/dev/1612699353613-2021-02-07T12:02:33.613Z/laravel.zip"
+          "S3Key": "serverless/laravel/dev/1612700754782-2021-02-07T12:25:54.782Z/laravel.zip"
         },
         "Handler": "artisan",
         "Runtime": "provided.al2",
@@ -217,24 +217,24 @@
         "ArtisanLogGroup"
       ]
     },
-    "ArtisanLambdaVersionMHsjm91GEudCq9LU58O4fRQDpgpYlmbIlWwmU1F4M": {
+    "ArtisanLambdaVersionSu5BkkLF8MLAuAtshWtaCLgGCgxA6w72zbcVnkbdtns": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ArtisanLambdaFunction"
         },
-        "CodeSha256": "Jw6vyyrcbu7YBeMqlXyGVF3IXKCPCGg2+T+nzHPnbKM="
+        "CodeSha256": "mzgC/4Bajyq9/gbIq79DW/cNvFZk7XxZAqAQe+S/wyg="
       }
     },
-    "WebLambdaVersioneaobHKxIXntxvSBsyTGcdsuC1df8UpuU5N5kZWdy1pc": {
+    "WebLambdaVersionskSjLD8B5smho7dmOv3wdeCZRa9FygqLg0mx1wkKk9M": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "WebLambdaFunction"
         },
-        "CodeSha256": "Jw6vyyrcbu7YBeMqlXyGVF3IXKCPCGg2+T+nzHPnbKM="
+        "CodeSha256": "mzgC/4Bajyq9/gbIq79DW/cNvFZk7XxZAqAQe+S/wyg="
       }
     },
     "HttpApi": {
@@ -342,13 +342,13 @@
     "ArtisanLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ArtisanLambdaVersionMHsjm91GEudCq9LU58O4fRQDpgpYlmbIlWwmU1F4M"
+        "Ref": "ArtisanLambdaVersionSu5BkkLF8MLAuAtshWtaCLgGCgxA6w72zbcVnkbdtns"
       }
     },
     "WebLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WebLambdaVersioneaobHKxIXntxvSBsyTGcdsuC1df8UpuU5N5kZWdy1pc"
+        "Ref": "WebLambdaVersionskSjLD8B5smho7dmOv3wdeCZRa9FygqLg0mx1wkKk9M"
       }
     },
     "HttpApiId": {
