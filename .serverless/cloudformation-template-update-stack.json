@@ -71,10 +71,16 @@
         }
       }
     },
-    "ApiLogGroup": {
+    "WebLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/app-dev-api"
+        "LogGroupName": "/aws/lambda/laravel-dev-web"
+      }
+    },
+    "ArtisanLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/laravel-dev-artisan"
       }
     },
     "IamRoleLambdaExecution": {
@@ -102,7 +108,7 @@
               "Fn::Join": [
                 "-",
                 [
-                  "app",
+                  "laravel",
                   "dev",
                   "lambda"
                 ]
@@ -119,7 +125,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/app-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/laravel-dev*:*"
                     }
                   ]
                 },
@@ -130,7 +136,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/app-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/laravel-dev*:*:*"
                     }
                   ]
                 }
@@ -143,7 +149,7 @@
           "Fn::Join": [
             "-",
             [
-              "app",
+              "laravel",
               "dev",
               {
                 "Ref": "AWS::Region"
@@ -154,18 +160,18 @@
         }
       }
     },
-    "ApiLambdaFunction": {
+    "WebLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/app/dev/1612698953901-2021-02-07T11:55:53.901Z/app.zip"
+          "S3Key": "serverless/laravel/dev/1612699353613-2021-02-07T12:02:33.613Z/laravel.zip"
         },
-        "Handler": "index.php",
+        "Handler": "public/index.php",
         "Runtime": "provided.al2",
-        "FunctionName": "app-dev-api",
+        "FunctionName": "laravel-dev-web",
         "MemorySize": 1024,
         "Timeout": 28,
         "Role": {
@@ -179,23 +185,62 @@
         ]
       },
       "DependsOn": [
-        "ApiLogGroup"
+        "WebLogGroup"
       ]
     },
-    "ApiLambdaVersionBW5m15vimNcKSWA3AtKAbzE96RlK5TC1nI55jD4Vc": {
+    "ArtisanLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/laravel/dev/1612699353613-2021-02-07T12:02:33.613Z/laravel.zip"
+        },
+        "Handler": "artisan",
+        "Runtime": "provided.al2",
+        "FunctionName": "laravel-dev-artisan",
+        "MemorySize": 1024,
+        "Timeout": 120,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Layers": [
+          "arn:aws:lambda:us-east-1:209497400698:layer:php-74:18",
+          "arn:aws:lambda:us-east-1:209497400698:layer:console:32"
+        ]
+      },
+      "DependsOn": [
+        "ArtisanLogGroup"
+      ]
+    },
+    "ArtisanLambdaVersionMHsjm91GEudCq9LU58O4fRQDpgpYlmbIlWwmU1F4M": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "ApiLambdaFunction"
+          "Ref": "ArtisanLambdaFunction"
         },
-        "CodeSha256": "KP7QocEsH53MXJG5r5q9Bfrskej7Ke2ZQiBPyI2pxZQ="
+        "CodeSha256": "Jw6vyyrcbu7YBeMqlXyGVF3IXKCPCGg2+T+nzHPnbKM="
+      }
+    },
+    "WebLambdaVersioneaobHKxIXntxvSBsyTGcdsuC1df8UpuU5N5kZWdy1pc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "WebLambdaFunction"
+        },
+        "CodeSha256": "Jw6vyyrcbu7YBeMqlXyGVF3IXKCPCGg2+T+nzHPnbKM="
       }
     },
     "HttpApi": {
       "Type": "AWS::ApiGatewayV2::Api",
       "Properties": {
-        "Name": "dev-app",
+        "Name": "dev-laravel",
         "ProtocolType": "HTTP"
       }
     },
@@ -212,12 +257,12 @@
         }
       }
     },
-    "ApiLambdaPermissionHttpApi": {
+    "WebLambdaPermissionHttpApi": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": {
           "Fn::GetAtt": [
-            "ApiLambdaFunction",
+            "WebLambdaFunction",
             "Arn"
           ]
         },
@@ -249,7 +294,7 @@
         }
       }
     },
-    "HttpApiIntegrationApi": {
+    "HttpApiIntegrationWeb": {
       "Type": "AWS::ApiGatewayV2::Integration",
       "Properties": {
         "ApiId": {
@@ -258,7 +303,7 @@
         "IntegrationType": "AWS_PROXY",
         "IntegrationUri": {
           "Fn::GetAtt": [
-            "ApiLambdaFunction",
+            "WebLambdaFunction",
             "Arn"
           ]
         },
@@ -279,13 +324,13 @@
             [
               "integrations",
               {
-                "Ref": "HttpApiIntegrationApi"
+                "Ref": "HttpApiIntegrationWeb"
               }
             ]
           ]
         }
       },
-      "DependsOn": "HttpApiIntegrationApi"
+      "DependsOn": "HttpApiIntegrationWeb"
     }
   },
   "Outputs": {
@@ -294,10 +339,16 @@
         "Ref": "ServerlessDeploymentBucket"
       }
     },
-    "ApiLambdaFunctionQualifiedArn": {
+    "ArtisanLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionBW5m15vimNcKSWA3AtKAbzE96RlK5TC1nI55jD4Vc"
+        "Ref": "ArtisanLambdaVersionMHsjm91GEudCq9LU58O4fRQDpgpYlmbIlWwmU1F4M"
+      }
+    },
+    "WebLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "WebLambdaVersioneaobHKxIXntxvSBsyTGcdsuC1df8UpuU5N5kZWdy1pc"
       }
     },
     "HttpApiId": {
